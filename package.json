@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "DEBUG=* node index.js"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "fastboot": "^2.0.1"
+  }
+}
