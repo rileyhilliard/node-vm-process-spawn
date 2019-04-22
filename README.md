@@ -6,6 +6,7 @@ Proof of concept for capturing errors from a node vm with multiple spawned proce
 `yarn && yarn start`
 
 `processSpawnCount` defines the amount of processes to spin up. If you want to see the affect of more running processes, increase the value of this constant.
+
 `logFromTheMainApp` toggles between a single `process.on()` at the app level, vs multiple `process.on()` handlers in each instance.
 
 ## What is this demonstrating?
