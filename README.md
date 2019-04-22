@@ -12,7 +12,7 @@ Proof of concept for capturing errors from a node vm with multiple spawned proce
 ## What is this demonstrating?
 - `index.js` creates `X` `vm.Script()` instances (where `X` is the numeric value of `processSpawnCount`).
 - `process` is passed into each `vm` instance.
-- Each `vm` instances registers a `process.on('uncaughtException')` listener that outputs `debugger` logs with information on the listeners instance emission source.
+- Each `vm` instances registers a `process.on('uncaughtException')` listener that outputs `debug` logs with information on the listeners instance emission source.
 - Only the _last_ `vm` instance will emit a single error.
 
 ### What does this show?
