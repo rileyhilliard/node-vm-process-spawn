@@ -20,4 +20,4 @@ This means that if there are 5 instances running with `process.on('uncaughtExcep
 When toggling `logFromTheMainApp = true` and only turning on a single `process.on('uncaughtException')` at the main-app level, only 1 error is caught as desired, but knowing which process instance emitted that error is difficult to ascertain.
 
 ## Demo
-![](https://i.ibb.co/2PJYd4h/demo.gif)
+![Demo](https://i.ibb.co/YPMpj0d/demo.gif)
