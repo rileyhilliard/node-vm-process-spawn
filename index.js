@@ -2,11 +2,11 @@ const vm = require('vm');
 const debug = require('debug')('logged from the main-app:')
 
 // count of processes to kick off
-const processSpawnCount = 5;
+const processSpawnCount = 100;
 
 // Toggle between one single app-level catch
 // & multiple spawned process catchers
-const logFromTheMainApp = true;
+const logFromTheMainApp = false;
 
 debug('|===== Start of Main =====|');
 
@@ -36,10 +36,9 @@ const executable = index => `
   }
 `;
 
-const sandbox = vm.createContext({ require, process, console, setTimeout, clearTimeout });
-
 // Spawn X VM processes, where X = processSpawnCount
 for (let i = 1; i <= processSpawnCount; ++i) {
+  const sandbox = vm.createContext({ require, process, console, setTimeout, clearTimeout });
   const code = executable(i);
   setTimeout(() => new vm.Script(code).runInContext(sandbox));
 }
