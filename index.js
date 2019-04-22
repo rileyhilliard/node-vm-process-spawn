@@ -1,34 +1,44 @@
 const vm = require('vm');
-const fs = require('fs');
-const debug = require('debug')('main-app')
+const debug = require('debug')('logged from the main-app:')
 
-const processSpawnCount = 10;
+// count of processes to kick off
+const processSpawnCount = 5;
+
+// Toggle between one single app-level catch
+// & multiple spawned process catchers
+const logFromTheMainApp = true;
 
 debug('|===== Start of Main =====|');
-const sandbox = vm.createContext({ require, process, console, setTimeout, clearTimeout });
 
 // catch errors at global app level
-// process.on('uncaughtException', (...args) =>
-//   debug('main-app - uncaughtException args %O:', args)
-// );
+process.on('uncaughtException', (...args) =>
+  logFromTheMainApp && debug('main-app - uncaughtException args %O:', args)
+);
 
+// Code generator for each VM instance
 const executable = index => `
   var debug = require('debug')('logged from process-${index} spawn:');
-  var count = 0;
-  process.on('uncaughtException', ({ message }) => {
-    debug('caught/emitted from process-${index}👇');
-    debug('error.message:', message);
-    debug('emission count:', ++count);
-    debug('---------------------------------------');
-  });
-  debug('process-${index} setup process.on() listener');
 
-  if (${index} > 9) {
+  if (${!logFromTheMainApp}) {
+    var count = 0;
+    process.on('uncaughtException', ({ message }) => {
+      debug('caught/emitted from process-${index}👇');
+      debug('error.message:', message);
+      debug('emission count:', ++count);
+      debug('---------------------------------------');
+    });
+    debug('process-${index} setup process.on() listener');
+  }
+
+  if (${index} > ${processSpawnCount - 1}) {
     debug('will throw exception from process-${index}');
     throw new Error('Error emitted from process-${index}');
   }
 `;
 
+const sandbox = vm.createContext({ require, process, console, setTimeout, clearTimeout });
+
+// Spawn X VM processes, where X = processSpawnCount
 for (let i = 1; i <= processSpawnCount; ++i) {
   const code = executable(i);
   setTimeout(() => new vm.Script(code).runInContext(sandbox));
